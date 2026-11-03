@@ -1,0 +1,49 @@
+---
+layout: runbook
+title: '#4471 split · two problems, not one'
+owner: support desk
+status: draft
+reviewed: 2026-11-02
+signature: 'v1.eyJzdWIiOiI3MjE5IiwiYXVkIjoiY2hhbGxlbmdlOndoYXQtaXQtc2hvd3MiLCJpYXQiOjE3OTM2ODA3NTcsImV4cCI6MTc5Mzc2NzE1N30.0ZEFXFKHnOtkOZIc86pYHejqD3zCN9QGlLlZ7bJpfmM'
+---
+
+<script>
+  import ProblemSplit from '#lib/kb/ProblemSplit.svelte';
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+  import Callout from '#lib/kb/Callout.svelte';
+
+  const issues = {
+    parser: 'https://github.com/steven-rg-harrison/mega-s01e03/issues/1',
+    hint: 'https://github.com/steven-rg-harrison/mega-s01e03/issues/2',
+  };
+</script>
+
+[#4471](/kb/incidents/4471) was merged on subject line ([decision 0001](/kb/decisions/0001-dedupe-by-subject))
+and marked known with one fix queued. Read by what each report says, it holds two problems.
+The parser fix closes only the first.
+
+<Callout kind="warn">
+Not one issue. Each problem below has its own ticket and its own fix.
+</Callout>
+
+## The split
+
+<ProblemSplit ticket={4471} {issues} />
+
+## What each problem is
+
+- **`parser`**: the shared parser reads every date month first, so day-first tenants get day and
+  month swapped. This is what #4471 describes.
+- **`hint`**: booking-v3's form prints `MM/DD/YYYY` under its date field and then reads the date
+  day first. People type what the hint says. Only form reports from booking-v3 tenants.
+
+A few `parser` reports describe a one-day move, not a swap (the desk's `oneDayMove` notes). The
+desk counts them under `parser` by tenant; the table footnotes them.
+
+## How the count works
+
+- One report per id: the export repeats some rows.
+- Cause by tenant and channel (`causes.ts`), never by `meta.intakeTag`, which is a browser guess.
+- The table is computed at render time, so it follows the data as the desk keeps working.
+
+<RenderStamp {signature} />
